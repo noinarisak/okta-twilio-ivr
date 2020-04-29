@@ -7,7 +7,6 @@ def configure_app(new_app, config_name='development'):
 
 
 app = Flask(__name__)
-import ivr_phone_tree_python.views_new
-# import ivr_phone_tree_python.views
+import ivr_phone_tree_python.views  # noqa: F401
 
 configure_app(app)

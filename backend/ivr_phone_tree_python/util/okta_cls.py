@@ -128,7 +128,6 @@ class OktaIVR:
 
         print(response.text.encode('utf8'))
 
-        _push_verified = False
         result = response.json()
 
         result = {

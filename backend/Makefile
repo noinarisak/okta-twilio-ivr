@@ -1,7 +1,6 @@
 # Author: noi.narisak@gmail.com
-# Date:
-# Desc: Base makefile template for Python development
-# v1: Init
+# Date: April 30, 2020
+# Desc: Python/Flask and Twilio development tooling
 
 .ONESHELL:
 .SHELL := /usr/bin/bash
@@ -48,6 +47,14 @@ run: venv ## Run
 	@source venv/bin/activate; python manage.py runserver
 
 .PHONY: test
-test: venv ## Run test
+test: venv ## Execute test
 	@echo "+ $@"
 	@source venv/bin/activate; nosetests project/test
+
+.PHONY: twilio
+twilio: ## Update Twilio Voice WebHook
+	@echo "+ $@"
+	@twilio login $(TWILIO_ACCOUNT_SID) --auth-token=$(TWILIO_AUTH_TOKEN) --profile=okta --force
+	@twilio phone-numbers:update $(TWILIO_PHONE_SID) \
+		--voice-method=POST \
+		--voice-url=$(TWILIO_PHONE_WEBHOOK_URL)

@@ -1,13 +1,14 @@
 import os
 
 from dotenv import load_dotenv, find_dotenv
-load_dotenv(find_dotenv())
+load_dotenv(find_dotenv(filename='.env', raise_error_if_not_found=True), verbose=True)
 
 
 class DefaultConfig(object):
     DEBUG = False
     SECRET_KEY = b'_5#y2L"F4Q8z\n\xec]/'
     OKTA_API_TOKEN = os.getenv('OKTA_API_TOKEN')
+    OKTA_ORG_URL = os.getenv('OKTA_ORG_URL')
 
 
 class DevelopmentConfig(DefaultConfig):
