@@ -20,7 +20,7 @@ six==1.10.0
 traceback2==1.4.0
 twilio==6.9.0
 unittest2==1.1.0
-Werkzeug==0.11.2
+Werkzeug==0.15.3
 python-dotenv==0.13.0
 polling==0.3.1
 num2words==0.5.10
