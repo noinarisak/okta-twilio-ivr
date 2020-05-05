@@ -9,6 +9,7 @@ class DefaultConfig(object):
     SECRET_KEY = b'_5#y2L"F4Q8z\n\xec]/'
     OKTA_API_TOKEN = os.getenv('OKTA_API_TOKEN')
     OKTA_ORG_URL = os.getenv('OKTA_ORG_URL')
+    APP_CUSTOMER_NAME = os.getenv('APP_CUSTOMER_NAME', 'OKTA IVR DEMO')
 
 
 class DevelopmentConfig(DefaultConfig):

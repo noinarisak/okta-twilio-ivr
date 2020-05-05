@@ -4,13 +4,13 @@
     session,
     url_for,
 )
+from num2words import num2words
 from twilio.twiml.voice_response import VoiceResponse
 
 from ivr_phone_tree_python import app
 from ivr_phone_tree_python.view_helpers import twiml
 from ivr_phone_tree_python.util.okta import (
     get_user,
-    get_mfa_state_token,
     send_mfa_challenge,
     sms_mfa_verify,
     push_mfa_polling,
@@ -25,26 +25,24 @@ def home():
 
 @app.route('/ivr/welcome', methods=['POST'])
 def welcome():
-    print(request.values)
+    app.logger.debug(request.values)
 
-    customer_name = "Virgin Mobile"
+    customer_name = app.config['APP_CUSTOMER_NAME']
 
     caller_phone_number = request.values['Caller']
 
-    _user, _factor = get_user(caller_phone_number)
+    _user, _factor, _auth = get_user(caller_phone_number)
 
     print("_user:")
     print(_user)
     print("_factor:")
     print(_factor)
-
-    _auth = get_mfa_state_token(_user['profile']['login'])
-
     print("_auth")
     print(_auth)
 
     session['user_id'] = _user['id']
     session['factor_id'] = _factor['id']
+    session['factor_type'] = _factor['factorType']
     session['state_token'] = _auth['stateToken']
 
     caller_name = '{first_name} {last_name}'.format(first_name=_user['profile']['firstName'],
@@ -54,13 +52,6 @@ def welcome():
     caller_state = request.values['CallerState']
     caller_country = request.values['CallerCountry']
 
-    if _factor['factorType'] == "sms":
-        caller_factor_name = "SMS"
-    elif _factor['factorType'] == "push":
-        caller_factor_name = "Okta Verify with Push"
-    else:
-        raise
-
     _message = 'Thanks for calling the {customer_name} automated Service. '.format(customer_name=customer_name)
     _message += 'Nice to meet you {caller_name}. '.format(caller_name=caller_name)
     _message += 'You are calling from {caller_phone_number} in {caller_city} {caller_state} {caller_country}. '.format(
@@ -69,10 +60,10 @@ def welcome():
         caller_state=caller_state,
         caller_country=caller_country
     )
-    _message += 'Your preferred Multi Factor is {factor_name}'.format(factor_name=caller_factor_name)
+    # _message += 'Your preferred Multi Factor is {factor_name}'.format(factor_name=caller_factor_name)
 
-    _menu_message = 'Please press 1 to automated authenication'
-    _menu_message += 'Press 2 for a support agent.'
+    _menu_message = 'Please press 1 to begin accessing your account. '
+    _menu_message += 'Press 2 for a list of departments. '
 
     response = VoiceResponse()
     with response.gather(
@@ -88,7 +79,7 @@ def welcome():
 @app.route('/ivr/menu', methods=['POST'])
 def menu():
     selected_option = request.form['Digits']
-    option_actions = {'1': _list_authentication,
+    option_actions = {'1': _authentication,
                       '2': _lazy_support_agent, }
 
     if selected_option in option_actions:
@@ -101,9 +92,16 @@ def menu():
 
 @app.route('/ivr/authenticate', methods=['POST'])
 def authenticate():
-    selected_option = request.form['Digits']
-    option_actions = {'1': _send_sms,
-                      '2': _send_okta_push, }
+    selected_option = session['factor_type']
+
+    print('request')
+    print(request)
+
+    print('selected_option')
+    print(selected_option)
+
+    option_actions = {'sms': _send_sms,
+                      'push': _send_okta_push, }
 
     if selected_option in option_actions:
         response = VoiceResponse()
@@ -136,7 +134,7 @@ def verify_sms():
     return twiml(response)
 
 
-@app.route('/ivr/verify_okta_push', methods=['GET', 'POST'])
+@app.route('/ivr/verify_okta_push', methods=['POST'])
 def verify_okta_push():
     _factor_id = session['factor_id']
     _state_token = session['state_token']
@@ -178,16 +176,26 @@ def account_menu():
 
 # private methods
 
-def _list_authentication(response):
-    _menu_message = 'Please press 1 for authenticate by SMS.'
-    _menu_message += 'Press 2 for authenticate by Okta Verify Push.'
+def _authentication(response):
+    print('_authentication')
+
+    if session['factor_type'] == "sms":
+        caller_factor_name = "SMS"
+    elif session['factor_type'] == "push":
+        caller_factor_name = "Okta Verify with Push"
+    else:
+        raise Exception('Unable to determine factor type.')
+
+    _message = 'Your preferred Multi Factor is {factor_name}. '.format(factor_name=caller_factor_name)
+    _message += 'Please press 1 to continue. '
 
     with response.gather(
         numDigits=1, action=url_for('authenticate'), method="POST"
     ) as g:
-        g.say(message=_menu_message,
+        g.say(message=_message,
               voice="alice", language="en-GB", loop=3)
 
+    print(response)
     return response
 
 
@@ -200,10 +208,10 @@ def _send_sms(response):
     _message = "We have sent a SMS code"
     response.say(message=_message, voice="alice", language="en-GB")
 
-    return _recieve_sms_passcode(response)
+    return _receive_sms_passcode(response)
 
 
-def _recieve_sms_passcode(response):
+def _receive_sms_passcode(response):
     _message = "Please enter the 6 digit passcode that was sent followed by the pound sign."
     with response.gather(
         numDigits=6, action=url_for('verify_sms'), method="POST", finishOnKey='#', timeout=30,
@@ -219,6 +227,8 @@ def _send_okta_push(response):
     _factor_id = session['factor_id']
     _state_token = session['state_token']
 
+    print('_factor_id')
+    print(_factor_id)
     send_mfa_challenge(factor_id=_factor_id, state_token=_state_token)
 
     _message = "We have sent a Okta Verify with Push. "
@@ -253,7 +263,7 @@ def _lazy_support_agent(response):
 
 
 def _send_account_balance(response):
-    _message = "Your current balance is 200 dollars and due on the May 8, 2020."
+    _message = 'Your current balance is 200 dollars and due on May {day}, {year}. '.format(day=num2words(8), year=num2words(2020))
     _message += "Good bye!"
     response.say(message=_message, voice="alice", language="en-GB")
 
@@ -262,7 +272,7 @@ def _send_account_balance(response):
 
 def _redirect_welcome():
     response = VoiceResponse()
-    response.say("Returning to the main menu", voice="alice", language="en-GB")
+    response.say("Returning to the main menu.", voice="alice", language="en-GB")
     response.redirect(url_for('welcome'))
 
     return twiml(response)

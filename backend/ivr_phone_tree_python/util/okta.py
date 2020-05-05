@@ -7,15 +7,17 @@ from ivr_phone_tree_python import app
 
 def get_user(phone_number):
     _user = get_user_by_phone(phone_number)
-    # _factor = get_user_factorid_by_factor_type(user_id=_user['id'], factor_type='sms')
-    _factor = get_user_factorid_by_factor_type(user_id=_user['id'], factor_type='push')
+    _user_factor_preference_type = _user['profile']['ivrFactorPreference']
+    _factor = get_user_factorid_by_factor_type(user_id=_user['id'], factor_type=_user_factor_preference_type)
+    _auth = get_mfa_state_token(username=_user['profile']['login'])
 
-    return _user, _factor
+    return _user, _factor, _auth
 
 
 def get_user_by_phone(phone_number):
-    query_search = requests.utils.quote('profile.mobilePhone eq "{}"'.format(phone_number))
-    url = 'https://bellca.okta.com/api/v1/users?search={}&limit=1'.format(query_search)
+    query_search = requests.utils.quote('profile.ivrPhone eq "{phone_number}"'.format(phone_number=phone_number))
+    url = '{org_url}/api/v1/users?search={query}&limit=1'.format(org_url=app.config['OKTA_ORG_URL'],
+                                                                 query=query_search)
 
     print('url:')
     print(url)
@@ -33,8 +35,31 @@ def get_user_by_phone(phone_number):
     return response.json()[0]
 
 
-def get_user_factorid_by_factor_type(user_id, factor_type='sms'):
-    url = 'https://bellca.okta.com/api/v1/users/{user_id}/factors'.format(user_id=user_id)
+def get_user_factorid_by_factor_type(user_id=None, factor_type='sms'):
+    if user_id is None:
+        raise ValueError('user_id is None')
+
+    factor_type_list = get_user_factors(user_id)
+
+    result = [factor for factor in factor_type_list if factor['factorType'] == factor_type]
+    if not result:
+        raise Exception(
+            'Not supported factor type. factor_type="{}"'.format(factor_type)
+        )
+    if len(result) > 1:
+        raise Exception(
+            'Multiple factor were returned.'
+        )
+
+    return result[0]
+
+
+def get_user_factors(user_id=None):
+    if user_id is None:
+        raise ValueError('user_id is None')
+
+    url = '{org_url}/api/v1/users/{user_id}/factors'.format(org_url=app.config['OKTA_ORG_URL'],
+                                                            user_id=user_id)
 
     headers = {
         'Authorization': 'SSWS {api_token}'.format(api_token=app.config['OKTA_API_TOKEN']),
@@ -45,13 +70,16 @@ def get_user_factorid_by_factor_type(user_id, factor_type='sms'):
     response = requests.request("GET", url, headers=headers)
 
     factor_type_list = response.json()
+    if not factor_type_list:
+        raise Exception(
+            'No factors found. user={}'.format(user_id)
+        )
 
-    result = [factor for factor in factor_type_list if factor['factorType'] == factor_type]
-    return result[0]
+    return factor_type_list
 
 
 def get_mfa_state_token(username):
-    url = "https://bellca.okta.com/api/v1/authn"
+    url = '{org_url}/api/v1/authn'.format(org_url=app.config['OKTA_ORG_URL'])
 
     payload = {
         'username': username,
@@ -66,7 +94,8 @@ def get_mfa_state_token(username):
 
 
 def send_mfa_challenge(factor_id, state_token):
-    url = 'https://bellca.okta.com/api/v1/authn/factors/{factor_id}/verify'.format(factor_id=factor_id)
+    url = '{org_url}/api/v1/authn/factors/{factor_id}/verify'.format(org_url=app.config['OKTA_ORG_URL'],
+                                                                     factor_id=factor_id)
 
     payload = {
         'stateToken': state_token
@@ -82,7 +111,8 @@ def send_mfa_challenge(factor_id, state_token):
 
 
 def sms_mfa_verify(factor_id, state_token, pass_code):
-    url = 'https://bellca.okta.com/api/v1/authn/factors/{factor_id}/verify'.format(factor_id=factor_id)
+    url = '{org_url}/api/v1/authn/factors/{factor_id}/verify'.format(org_url=app.config['OKTA_ORG_URL'],
+                                                                     factor_id=factor_id)
 
     payload = {
         'stateToken': state_token,
@@ -120,7 +150,8 @@ def push_mfa_verify(response):
 
 def push_mfa_polling(factor_id, state_token):
     _valid = False
-    url = 'https://bellca.okta.com/api/v1/authn/factors/{factor_id}/verify'.format(factor_id=factor_id)
+    url = '{org_url}/api/v1/authn/factors/{factor_id}/verify'.format(org_url=app.config['OKTA_ORG_URL'],
+                                                                     factor_id=factor_id)
 
     payload = {
         'stateToken': state_token,
