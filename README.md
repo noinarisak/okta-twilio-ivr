@@ -39,9 +39,9 @@ TODO
 
 ## Design
 
-Sequence Diagram
+Sequence Diagram Flow
 
-TODO: Upload sequence diagram
+![Sequence Diagram](./docs/imgs/Okta_and_IVR.png)
 
 ### Usage Guide
 
