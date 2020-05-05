@@ -1,5 +1,5 @@
 from ivr_phone_tree_python import app
-from flask.ext.script import Manager
+from flask_script import Manager
 
 manager = Manager(app)
 
