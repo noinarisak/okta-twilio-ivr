@@ -13,7 +13,8 @@ venv: venv/bin/activate
 venv/bin/activate: requirements
 	@echo "+ $@"
 	@test -d venv || python -m venv venv
-	@source venv/bin/activate; pip install -Ur requirements/dev.txt
+	# @source venv/bin/activate; pip install -Ur requirements/dev.txt
+	@source venv/bin/activate; pip install -Ur requirements.txt
 	@touch venv/bin/activate
 
 .PHONY: help
