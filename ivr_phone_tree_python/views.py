@@ -147,7 +147,7 @@ def verify_okta_push():
         response.say(message="Forwarding to your account menu.", voice="alice", language="en-GB")
         response.redirect(url_for('account_welcome'))
     else:
-        response.say(message="Sorry, there was no response from Okta Verify Push. Please call again!", voice="alice", language="en-GB")
+        response.say(message="Sorry, there was no response from Virgin Verify Push. Please call again!", voice="alice", language="en-GB")
         response.hangup()
 
     return twiml(response)
@@ -182,7 +182,7 @@ def _authentication(response):
     if session['factor_type'] == "sms":
         caller_factor_name = "SMS"
     elif session['factor_type'] == "push":
-        caller_factor_name = "Okta Verify with Push"
+        caller_factor_name = "Virgin Verify with Push"
     else:
         raise Exception('Unable to determine factor type.')
 
@@ -231,7 +231,7 @@ def _send_okta_push(response):
     print(_factor_id)
     send_mfa_challenge(factor_id=_factor_id, state_token=_state_token)
 
-    _message = "We have sent a Okta Verify with Push. "
+    _message = "We have sent a Virgin Verify with Push. "
     response.say(message=_message, voice="alice", language="en-GB")
     response.redirect(url_for('verify_okta_push'))
 
@@ -252,7 +252,7 @@ def _redirect_account_menu(response):
 
 
 def _lazy_support_agent(response):
-    _message = "Thank you for calling Bell Canada support line."
+    _message = "Thank you for calling Virgin Mobile support line."
     _message += "We currently experiencing high volume of calls"
     _message += "We have place you on return call que for call back."
 
