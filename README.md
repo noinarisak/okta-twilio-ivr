@@ -20,42 +20,42 @@ Okta and Twilio integration IVR (Interactive Voice Response) demo. This intergar
 ## Pre-requirements
 
 * Python 3.8 and packages in [requirements](./requirements) files.
-* ngrok (Local testing). [Manual instructions](https://ngrok.com/download) or "`brew install ngrok`". :tada:
+* ngrok (Local testing). [Manual instructions](https://ngrok.com/download) or "`brew install ngrok`." :tada:
 * Twilio account
 * Okta account
 * Mobile phone with Okta Verify installed
 
 ## Demo Setup
 
-> WARNING: You have to purchase Twilio phone number for this demo function.
+> WARNING: You have to purchase a Twilio phone number for this demo function.
 
 ### Setup Twilio Tenant
 
-> NOTE: This project piggy backs on existing walk-through from Twilio tutorial for Python/Flask + Twilio. My addition is using Okta MFA functionality into the mix. :smiley:
+> NOTE: This project piggybacks on existing walk-through from Twilio tutorial for Python/Flask + Twilio. My addition is using Okta MFA functionality into the mix. :smiley:
 
 1. Follow the instructions Twilio guide purchase and create Phone number [here](https://www.twilio.com/docs/voice/quickstart/python#sign-up-for-twilio-and-get-a-phone-number). (OPTIONAL) You can follow the rest of the guide to get more familiar with Twilio + Python, but this guide is really about Twilio + Okta. :smiley:
-2. The [Allow Twilio to talk to your Flask application](https://www.twilio.com/docs/voice/quickstart/python#allow-twilio-to-talk-to-your-flask-application) section is what we will focus on for this demo. It's gear toward Twilio Flask sample code which I have extend to showcase Okta as MFA on IVR with couple updates to Python and associated libraries. :blush:
+2. The [Allow Twilio to talk to your Flask application](https://www.twilio.com/docs/voice/quickstart/python#allow-twilio-to-talk-to-your-flask-application) section is what we will focus on for this demo. It's gear toward Twilio Flask sample code, which I have extended to showcase Okta as MFA on IVR with couple of updates to Python and associated libraries. :blush:
 
 ### Setup Okta Tenant
 
-> SMS as MFA is not activated on `*.oktapreview.com` tenants. Please contact Okta support if you plan to use a `*.oktapreview.com` tenant for this demo. Reference Feature Flag: `SMS_SERVICE`
+> SMS, as MFA is not activated on `*.oktapreview.com` tenants. Please contact Okta support if you plan to use a `*.oktapreview.com` tenant for this demo. Reference Feature Flag: `SMS_SERVICE`
 
-> Factor Sequence is not activated on `*.oktapreview.com` tenants. Please contact Okta support if you plan to use a `*.oktapreview.com` tenant for this demo. Reference Feature Flag: `PASSWORDLESS_AUTHN_SIGNON_POLICY`
+> Factor Sequence, is not activated on `*.oktapreview.com` tenants. Please contact Okta support if you plan to use a `*.oktapreview.com` tenant for this demo. Reference Feature Flag: `PASSWORDLESS_AUTHN_SIGNON_POLICY`
 
-1. Create free developer account at [developer.okta.com](https://developer.okta.com/).
+1. Create a free developer account at [developer.okta.com](https://developer.okta.com/).
 2. To keep things somewhat organized we going to create the following resources in Okta
    * Custom Profile Attribute: ivrPhone, ivrFactorPreference
    * User: Jane Ivr
    * Group: Autobot-IVR
    * SignOn Policy & Rule: IVR Policy and IVR Rule
-   * Multi-Factor Type able and enrollment: SMS and Okta Very Push enabled and Factor Sequencing
+   * Multi-Factor Type enable and enrollment: SMS and Okta Very Push enabled and Factor Sequencing
 
-> NOTE: Must be logged in as Admin to Okta org for majority the steps below.
+> NOTE: Must be logged in as Admin to Okta org for the majority of the steps below.
 
 Create two custom profile attributes: `ivrFactorPreference` and `ivrPhone`
 
-1. On top navigation bar, navigate to `Directory` > `Profile Editor`.
-2. Select `Okta` on filter section and click on the `Profile` button to open the Profile Editor screen.
+1. On the top navigation bar, navigate to `Directory` > `Profile Editor`.
+2. Select `Okta` on the filter section and click on the `Profile` button to open the Profile Editor screen.
 3. Click on  `Add Attribute` button and enter the following fields for `ivrFactorPreference`:
 
 | Name | Value |
@@ -94,16 +94,16 @@ Create test user
 | Username | `jane.ivr@mailinator.com` |
 | Primary Email | `jane.ivr@mailinator.com` |
 | Password | Set by Admin, give our user a password |
-| User must change password on first login | Un-check |
+| User must change the password on first login | Un-check |
 
 4. Click `Save`.
 5. Search `Jane Ivr` and select her account.
 6. In Jane Ive account view, select `Profile` tab and click on `Edit` button.
-7. Locate new custome attributes we create. You keep `IVE Factor Preference` to SMS but should update the `IVR Phone` number with real phone number for your demo. e.g `+17735551234`. *NOTE*: This is the phone number that Twilio will interact with.
+7. Locate the new custom attributes we create. You keep `IVE Factor Preference` to SMS but update the `IVR Phone` number with a real phone number for your demo. e.g `+17735551234`. *NOTE*: This is the phone number that Twilio will interact with.
 
-Create group
+Create a group
 
-1. On top navigation bar, navigate to `Directory` > `Group`.
+1. On the top navigation bar, navigate to `Directory` > `Group`.
 2. Click `Add Group` and fill out the following fields.
 
 | Name | Value |
@@ -117,10 +117,10 @@ Create group
 
 Create and enable Multi-factor SMS and Okta Verify Push and enrollment
 
-1. On top navigation bar, navigate to `Security` > `Multifactor`.
-2. Under `Factor Type` tab, enable `Okta Verify` by selecting `Active` dropdown button and then clicking `Edit` button and checking on `Enable Push Notification`.
-3. Under `Factor Type` tab, enable `SMS Authentication` by selecting `Active` dropdown button.
-4. Under `Factor Enrollment` tab, click `Add Multifactor Policy` button.
+1. On the top navigation bar, navigate to `Security` > `Multifactor`.
+2. Under the `Factor Type` tab, enable `Okta Verify` by selecting the `Active` dropdown button and then clicking the `Edit` button and checking on `Enable Push Notification`.
+3. Under the `Factor Type` tab, enable `SMS Authentication` by selecting the `Active` dropdown button.
+4. Under the `Factor Enrollment` tab, click `Add Multifactor Policy` button.
 5. Fill out the following fields:
 
 | Name | Value |
@@ -174,9 +174,9 @@ e.g.
 
 Quick start
 
-> Running locally requires the use of ngork. ngork will act as a proxy to expose our running instance to the internet, in turn allows Twilio reach our endpoints that we implemented. Of course, you could host this yourself on Heroku or other similar Python hosting providers.
+> Running locally requires the use of ngork. ngork will act as a proxy to expose our running instance to the internet, which allows Twilio to reach our endpoints that we implemented. Of course, you could host this yourself on Heroku or other similar Python hosting providers.
 
-> :warning: NOTE: Running this demo requires two active session: ngork and flask. :warning:
+> :warning: NOTE: Running this demo requires two active sessions: ngork and flask. :warning:
 
 ### Ngork side
 
@@ -201,7 +201,7 @@ Connections                   ttl     opn     rt1     rt5     p50     p90
 ```
 
 1. Copy the `Forwarding` URL address because you need this to update your Twilio webhooks. (eg. `https://d03eb3d2e662.ngrok.io`)
-2. Following steps in [Configure your webhook URL](https://www.twilio.com/docs/voice/quickstart/python#configure-your-webhook-url) section has the details. :exclamation:Twilio direct url anchor may not work, just do a search for "Configure your webhook URL".
+2. The following steps to [Configure your webhook URL](https://www.twilio.com/docs/voice/quickstart/python#configure-your-webhook-url) section has the details. :exclamation:Twilio direct URL anchor may not work, just search (CTRL-F) for "Configure your webhook URL".
 
 ### Flask side
 
@@ -229,15 +229,15 @@ make run
 Test user needs to enroll both factors for MFA: `SMS` and `Okta Verify Push`.
 
 1. Enroll the user by logging in as Jane Ivr.
-2. Navigate to Jane's name and in the dropdown button select `Setting`.
-3. In the extra Verification section proceed to setup both SMS and Okta Verify Push.
+2. Navigate to Jane's name and in the dropdown button, select `Setting`.
+3. In the extra `Verification` section, proceed to setup both SMS and Okta Verify Push.
 
 Walk through instructions with interacting with the IVR.
 
 1. Dial the number that you have registered with Twilio. (ie. `1-207-555-1234`)
-2. Walk though the voice instructions and execute MFA (eg. Either `SMS` or `Okta Verify Push`)
+2. Walk through the voice instructions and execute MFA (eg. Either `SMS` or `Okta Verify Push`)
 3. Switch over to another factor by logging in as Super admin to your Okta org and updating "Jane Ivr" profile. Switching her `ivrFactorPreference` to another factor.
-4. And finally Thanks! :tada:
+4. And finally, Thanks! :tada:
 
 ## Design
 
