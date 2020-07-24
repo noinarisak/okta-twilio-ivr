@@ -61,7 +61,6 @@ def welcome():
         caller_state=caller_state,
         caller_country=caller_country
     )
-    # _message += 'Your preferred Multi Factor is {factor_name}'.format(factor_name=caller_factor_name)
 
     _menu_message = 'Please press 1 to begin accessing your account. '
     _menu_message += 'Press 2 for a list of departments. '

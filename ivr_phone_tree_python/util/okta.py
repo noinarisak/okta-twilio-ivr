@@ -150,9 +150,8 @@ def push_mfa_verify(response):
     print('result')
     print(result)
 
-    if 'status' in result:
-        if result['status'] == 'SUCCESS':
-            _valid = True
+    if 'status' in result and 'SUCCESS' == result['status']:
+        _valid = True
 
     return _valid
 
