@@ -6,14 +6,14 @@ name: Python package
 on:
   push:
     branches: [ master ]
-    paths: 
-      - '*.md'
-      - 'docs/*'
+    paths:
+      - '!*.md'
+      - '!docs/*'
   pull_request:
     branches: [ master ]
-    paths: 
-      - '*.md'
-      - 'docs/*'
+    paths:
+      - '!*.md'
+      - '!docs/*'
 
 jobs:
   build:
