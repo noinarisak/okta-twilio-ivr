@@ -5,6 +5,10 @@ on:
     # branches to consider in the event; optional, defaults to all
     branches:
       - master
+    # ignore rules
+    paths: 
+      - '*.md'
+      - 'docs/*'
 
 jobs:
   update_release_draft:
