@@ -19,11 +19,11 @@ Okta and Twilio integration IVR (Interactive Voice Response) demo. This intergar
 
 ## Pre-requirements
 
-* Python 3.8 and packages in [requirements](./requirements) files.
-* ngrok (Local testing). [Manual instructions](https://ngrok.com/download) or "`brew install ngrok`." :tada:
-* Twilio account
-* Okta account
-* Mobile phone with Okta Verify installed
+- Python 3.8 and packages in [requirements](./requirements) files.
+- ngrok (Local testing). [Manual instructions](https://ngrok.com/download) or "`brew install ngrok`." :tada:
+- Twilio account
+- Okta account
+- Mobile phone with Okta Verify installed
 
 ## Demo Setup
 
@@ -39,16 +39,15 @@ Okta and Twilio integration IVR (Interactive Voice Response) demo. This intergar
 ### Setup Okta Tenant
 
 > SMS, as MFA is not activated on `*.oktapreview.com` tenants. Please contact Okta support if you plan to use a `*.oktapreview.com` tenant for this demo. Reference Feature Flag: `SMS_SERVICE`
-
 > Factor Sequence, is not activated on `*.oktapreview.com` tenants. Please contact Okta support if you plan to use a `*.oktapreview.com` tenant for this demo. Reference Feature Flag: `PASSWORDLESS_AUTHN_SIGNON_POLICY`
 
 1. Create a free developer account at [developer.okta.com](https://developer.okta.com/).
 2. To keep things somewhat organized we going to create the following resources in Okta
-   * Custom Profile Attribute: ivrPhone, ivrFactorPreference
-   * User: Jane Ivr
-   * Group: Autobot-IVR
-   * SignOn Policy & Rule: IVR Policy and IVR Rule
-   * Multi-Factor Type enable and enrollment: SMS and Okta Very Push enabled and Factor Sequencing
+   - Custom Profile Attribute: ivrPhone, ivrFactorPreference
+   - User: Jane Ivr
+   - Group: Autobot-IVR
+   - SignOn Policy & Rule: IVR Policy and IVR Rule
+   - Multi-Factor Type enable and enrollment: SMS and Okta Very Push enabled and Factor Sequencing
 
 > NOTE: Must be logged in as Admin to Okta org for the majority of the steps below.
 
@@ -81,7 +80,7 @@ Create two custom profile attributes: `ivrFactorPreference` and `ivrPhone`
 
 5. Click `Save` button.
 
-Create test user
+Create a test user
 
 1. On top navigation bar, navigate to `Directory` > `People`.
 2. Click on `Add Person`.
@@ -175,7 +174,6 @@ e.g.
 Quick start
 
 > Running locally requires the use of ngork. ngork will act as a proxy to expose our running instance to the internet, which allows Twilio to reach our endpoints that we implemented. Of course, you could host this yourself on Heroku or other similar Python hosting providers.
-
 > :warning: NOTE: Running this demo requires two active sessions: ngork and flask. :warning:
 
 ### Ngork side
@@ -245,12 +243,10 @@ Sequence Diagram Flow
 
 ![Sequence Diagram](./docs/imgs/Okta_and_IVR.png)
 
-
-
 ## Authors
 
-* [noinarisak](https://github.com/noinarisak) Me :tada:
+- [noinarisak](https://github.com/noinarisak) Me :tada:
 
 ## Inspiration
 
-* [Twilio IVR Example](https://github.com/TwilioDevEd/ivr-phone-tree-python)
+- [Twilio IVR Example](https://github.com/TwilioDevEd/ivr-phone-tree-python)
