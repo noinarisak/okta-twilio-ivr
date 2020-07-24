@@ -5,6 +5,15 @@ import polling
 from ivr_phone_tree_python import app
 
 
+# private class
+class OktaIvrException(Exception):
+    """Exception class from which every exception in this library will derive.
+        It enables other projects using this library to catch all errors coming
+        from the library with a single "except" statement
+    """
+    pass
+
+
 def get_user(phone_number):
     _user = get_user_by_phone(phone_number)
     _user_factor_preference_type = _user['profile']['ivrFactorPreference']
@@ -43,11 +52,11 @@ def get_user_factorid_by_factor_type(user_id=None, factor_type='sms'):
 
     result = [factor for factor in factor_type_list if factor['factorType'] == factor_type]
     if not result:
-        raise Exception(
+        raise OktaIvrException(
             'Not supported factor type. factor_type="{}"'.format(factor_type)
         )
     if len(result) > 1:
-        raise Exception(
+        raise OktaIvrException(
             'Multiple factor were returned.'
         )
 
@@ -71,7 +80,7 @@ def get_user_factors(user_id=None):
 
     factor_type_list = response.json()
     if not factor_type_list:
-        raise Exception(
+        raise OktaIvrException(
             'No factors found. user={}'.format(user_id)
         )
 

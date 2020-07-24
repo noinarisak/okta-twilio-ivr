@@ -14,6 +14,7 @@ from ivr_phone_tree_python.util.okta import (
     send_mfa_challenge,
     sms_mfa_verify,
     push_mfa_polling,
+    OktaIvrException
 )
 
 
@@ -175,7 +176,6 @@ def account_menu():
 
 
 # private methods
-
 def _authentication(response):
     print('_authentication')
 
@@ -184,7 +184,7 @@ def _authentication(response):
     elif session['factor_type'] == "push":
         caller_factor_name = "Virgin Verify with Push"
     else:
-        raise Exception('Unable to determine factor type.')
+        raise OktaIvrException('Unable to determine factor type.')
 
     _message = 'Your preferred Multi Factor is {factor_name}. '.format(factor_name=caller_factor_name)
     _message += 'Please press 1 to continue. '
