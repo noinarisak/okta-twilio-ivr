@@ -9,6 +9,7 @@ from flask import url_for
 # except time to covert the testing to use pytest and the latest Flask-Testing 0.8.0. =(
 # *** WARNING ***
 
+
 class ViewsTests(BaseTestCase):
     # Ensures rout '/' renders the correct view
     def test_index_should_render_default_view(self):
