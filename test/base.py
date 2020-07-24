@@ -7,6 +7,7 @@ from flask.ext.testing import TestCase
 # except time to covert the testing to use pytest and the latest Flask-Testing 0.8.0. =(
 # *** WARNING ***
 
+
 class BaseTestCase(TestCase):
     render_templates = False
 
