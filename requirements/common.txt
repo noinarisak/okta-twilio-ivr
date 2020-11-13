@@ -4,7 +4,7 @@ Flask-Script==2.0.5
 funcsigs==0.4
 httplib2==0.18.0
 itsdangerous==0.24
-Jinja2==2.8
+Jinja2==2.10.1
 linecache2==1.0.0
 MarkupSafe==0.23
 pbr==1.8.1
