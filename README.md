@@ -1,8 +1,12 @@
 ![Python package](https://github.com/noinarisak/okta-twilio-ivr/workflows/Python%20package/badge.svg?branch=master)
 
-# Okta-Twilio-IVR Demo <!-- omit in toc -->
+# Okta-Twilio-IVR/VoiceBot Demo <!-- omit in toc -->
 
-Okta and Twilio integration IVR (Interactive Voice Response) demo. This intergartion using Okta for MFA on IVR system.
+Okta and Twilio integration IVR (Interactive Voice Response)/VoiceBot demo. This intergartion uses Okta for MFA on IVR/VoiceBot system.
+
+***Scenario:***
+
+Jon needs to validate his identity against a VoiceBot. We able to validate Jon via pre-enrolled factor either SMS factor and Okta Verify Push, to then all Jon to navigate his acccount via the VoiceBot.
 
 ## Table of Content <!-- omit in toc -->
 - [Pre-requirements](#pre-requirements)
@@ -162,6 +166,7 @@ Create SignOn Policy and Rule
 | Authentication method | Factor Sequence is selected |
 | Add two factor sequence types | 1. SMS Authentication |
 |                        | 2. Okta Verify Push |
+|                        | 3. Password |
 
 6. Click `Create Rule`.
 
