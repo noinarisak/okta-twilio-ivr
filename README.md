@@ -2,11 +2,11 @@
 
 # Okta-Twilio-IVR/VoiceBot Demo <!-- omit in toc -->
 
-Okta and Twilio integration IVR (Interactive Voice Response)/VoiceBot demo. This intergartion uses Okta for MFA on IVR/VoiceBot system.
+Okta and Twilio integration IVR (Interactive Voice Response)/VoiceBot demo. This intergartion uses Okta for MFA on IVR/VoiceBot system (Twilio).
 
 ***Scenario:***
 
-Jon needs to validate his identity against a VoiceBot. We able to validate Jon via pre-enrolled factor either SMS factor and Okta Verify Push, to then all Jon to navigate his acccount via the VoiceBot.
+Jon needs to validate his identity against a VoiceBot. We able to validate Jon via pre-enrolled factor either SMS and Okta Verify Push, to then all Jon to navigate his acccount via the VoiceBot.
 
 ## Table of Content <!-- omit in toc -->
 - [Pre-requirements](#pre-requirements)
