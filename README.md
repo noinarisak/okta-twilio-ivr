@@ -255,3 +255,4 @@ Sequence Diagram Flow
 ## Inspiration
 
 - [Twilio IVR Example](https://github.com/TwilioDevEd/ivr-phone-tree-python)
+- [Article by Indranil Jha](https://sec.okta.com/articles/2020/06/adaptive-step-multi-factor-authentication) - [Indranil Jha](https://github.com/indranilokg)
