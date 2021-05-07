@@ -28,8 +28,6 @@ def home():
 def welcome():
     app.logger.debug(request.values)
 
-    customer_name = app.config['APP_CUSTOMER_NAME']
-
     caller_phone_number = request.values['Caller']
 
     _user, _factor, _auth = get_user(caller_phone_number)
@@ -53,17 +51,17 @@ def welcome():
     caller_state = request.values['CallerState']
     caller_country = request.values['CallerCountry']
 
-    _message = 'Thanks for calling the {customer_name} automated Service. '.format(customer_name=customer_name)
-    _message += 'Nice to meet you {caller_name}. '.format(caller_name=caller_name)
-    _message += 'You are calling from {caller_phone_number} in {caller_city} {caller_state} {caller_country}. '.format(
+    _message = "Thanks for calling the {customer_name} automated Service. ".format(customer_name=app.config['APP_CUSTOMER_NAME'])
+    _message += "Nice to meet you {caller_name}. ".format(caller_name=caller_name)
+    _message += "You are calling from {caller_phone_number} in {caller_city} {caller_state} {caller_country}. ".format(
         caller_phone_number=caller_phone_number,
         caller_city=caller_city,
         caller_state=caller_state,
         caller_country=caller_country
     )
 
-    _menu_message = 'Please press 1 to begin accessing your account. '
-    _menu_message += 'Press 2 for a list of departments. '
+    _menu_message = "Please press 1 to begin accessing your account. "
+    _menu_message += "Press 2 for a list of departments. "
 
     response = VoiceResponse()
     with response.gather(
@@ -117,7 +115,7 @@ def verify_sms():
     _factor_id = session['factor_id']
     _state_token = session['state_token']
 
-    _message = 'You enter {passcode}'.format(passcode=_passcode)
+    _message = "You enter {passcode}".format(passcode=_passcode)
 
     response = VoiceResponse()
     response.say(message=_message, voice="alice", language="en-GB")
@@ -153,7 +151,7 @@ def verify_okta_push():
     else:
         _message = """
         Sorry, there was no response from {customer_name} Verify Push. Please call again!
-        """.format(customer_name=customer_name)  # noqa: F821
+        """.format(customer_name=app.config['APP_CUSTOMER_NAME'])  # noqa: F821
 
         response.say(message=_message, voice="alice", language="en-GB")
         response.hangup()
@@ -189,12 +187,12 @@ def _authentication(response):
     if session['factor_type'] == "sms":
         caller_factor_name = "SMS"
     elif session['factor_type'] == "push":
-        caller_factor_name = "{customer_name} Verify with Push".format(customer_name=customer_name)  # noqa: F821
+        caller_factor_name = "{customer_name} Verify with Push ".format(customer_name=app.config['APP_CUSTOMER_NAME'])  # noqa: F821
     else:
         raise OktaIvrException('Unable to determine factor type.')
 
-    _message = 'Your preferred Multi Factor is {factor_name}. '.format(factor_name=caller_factor_name)
-    _message += 'Please press 1 to continue. '
+    _message = "Your preferred Multi Factor is {factor_name}. ".format(factor_name=caller_factor_name)
+    _message += "Please press 1 to continue. "
 
     with response.gather(
         numDigits=1, action=url_for('authenticate'), method="POST"
@@ -238,7 +236,7 @@ def _send_okta_push(response):
     print(_factor_id)
     send_mfa_challenge(factor_id=_factor_id, state_token=_state_token)
 
-    _message = "We have sent a {customer_name} Verify with Push. ".format(customer_name=customer_name)  # noqa: F821
+    _message = "We have sent a {customer_name} Verify with Push. ".format(customer_name=app.config['APP_CUSTOMER_NAME'])  # noqa: F821
     response.say(message=_message, voice="alice", language="en-GB")
     response.redirect(url_for('verify_okta_push'))
 
@@ -259,7 +257,7 @@ def _redirect_account_menu(response):
 
 
 def _lazy_support_agent(response):
-    _message = "Thank you for calling {customer_name} Mobile support line.".format(customer_name=customer_name)  # noqa: F821
+    _message = "Thank you for calling {customer_name} Mobile support line. ".format(customer_name=app.config['APP_CUSTOMER_NAME'])  # noqa: F821
     _message += "We currently experiencing high volume of calls"
     _message += "We have place you on return call que for call back."
 
@@ -270,7 +268,7 @@ def _lazy_support_agent(response):
 
 
 def _send_account_balance(response):
-    _message = 'Your current balance is 200 dollars and due on May {day}, {year}. '.format(day=num2words(8), year=num2words(2020))
+    _message = "Your current balance is 200 dollars and due on May {day}, {year}. ".format(day=num2words(8), year=num2words(2020))
     _message += "Good bye!"
     response.say(message=_message, voice="alice", language="en-GB")
 
