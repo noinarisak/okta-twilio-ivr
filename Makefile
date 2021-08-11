@@ -59,3 +59,8 @@ twilio: ## Update Twilio Voice WebHook
 	@twilio phone-numbers:update $(TWILIO_PHONE_SID) \
 		--voice-method=POST \
 		--voice-url=$(TWILIO_PHONE_WEBHOOK_URL)
+
+.PHONY: deploy
+deploy: ## Deploy to Heroku via Git
+	@echo "+ $@"
+	@git push heroku master
