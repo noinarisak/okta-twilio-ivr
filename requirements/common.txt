@@ -18,3 +18,4 @@ Werkzeug==0.16.1
 python-dotenv==0.13.0
 polling==0.3.1
 num2words==0.5.10
+urllib3>=1.26.18 # not directly required, pinned by Snyk to avoid a vulnerability
